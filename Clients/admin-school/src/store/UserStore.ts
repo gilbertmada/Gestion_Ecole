@@ -213,7 +213,7 @@ console.log("userUpdate....",userUpdate);
 
       rootStore.succesSnackBar(true, 'Utilisateur ajouter avec succès');
       return add;
-    } catch (err) {
+    } catch (err:any) {
       if (err.message.includes('code 400')) {
         rootStore.updateSnackBar(true, 'Le type ');
         return;

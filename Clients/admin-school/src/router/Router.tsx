@@ -15,6 +15,8 @@ import {
 
 const Dashboard = lazy(() => import("../components/Dashboard"));
 const CreateStudent = lazy(() => import("../components/Student/CreateStudent/CreateStudent"));
+const CreateSchool = lazy(() => import("../components/Ecole/CreateSchool/CreateSchool"));
+// const Documents = lazy(() => import("../components/Student/CreateStudent/Documents"));
 const CreateClass=lazy(() => import("../components/Class/CreateClass/CreateClass"));
 const ListClass=lazy(() => import("../components/Class/ListClass/listClass"));
 // import {CreateStudent, Ecolage, ListStudent } from "../components/Student";
@@ -134,6 +136,20 @@ const Router = () => {
         // access={adminswithCom}
         access={utilisateurPermission}
         component={ListClass}
+      />
+         {/* <ProtectedRoute
+        path="/student/document"
+        exact={true}
+        // access={adminswithCom}
+        access={utilisateurPermission}
+        component={Documents}
+      /> */}
+         <ProtectedRoute
+        path="/school/new-school"
+        exact={true}
+        // access={adminswithCom}
+        access={utilisateurPermission}
+        component={CreateSchool}
       />
     </Switch>
   )

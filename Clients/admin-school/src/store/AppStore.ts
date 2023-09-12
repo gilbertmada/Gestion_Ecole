@@ -41,6 +41,7 @@ class AppStore implements RootStoreInterface {
     usersNumber: 0,
     professorNumber: 0,
     classNumber:0,
+    schoolNumber:0,
   };
 
 

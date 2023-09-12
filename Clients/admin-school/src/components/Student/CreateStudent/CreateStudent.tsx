@@ -28,6 +28,7 @@ import { toJS } from "mobx";
 import rootStore from '../../../store/AppStore';
 import useStyles from "./style";
 import { validationData } from "../CreateLogic";
+import MailIcon from "@material-ui/icons/Mail";
 import { etudiantRoles } from "../../../common/utils/data";
 
 interface CreateStudentProps extends AbstractEmptyInterface {
@@ -57,6 +58,7 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
 
     if (studentStore.selectedStudent) {
       setIsStorage(true);
+      setRole(getRole(studentStore.selectedStudent.role));
       setStudent(studentStore.selectedStudent);
     } else {
       setIsStorage(false);
@@ -68,14 +70,13 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
 
   useEffect(() => {
 
-    if (studentStore.selectedStudent) {
+    if (studentStore.selectedStudent?.role === "LEAD_H" || studentStore.selectedStudent?.role === "LEAD_F") {
       setIsRole(true);
-      setRole(getRole(studentStore.selectedStudent?.role));
-      setStudent(studentStore.selectedStudent);
     } else {
       setIsRole(false);
     }
   }, [studentStore.selectedStudent]);
+console.log("role.....",studentStore.selectedStudent?.role );
 
   useEffect(() => {
     studentStore.getAllStudent();
@@ -118,7 +119,7 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
 
     setRole(newValue);
     setStudent({ ...student, role: data, nomRole: nom });
-    studentStore.setStudent({ ...student, role: data, nomRole: nom  });
+    studentStore.setStudent({ ...student, role: data, nomRole: nom });
   };
 
   const getRole = (code: string) => {
@@ -127,7 +128,7 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
 
   const getPHotoProfilePath = (error: any, response: any) => {
     setStudent({ ...student, photo: response.data.path.replace("fichier", "/uploadFile/file") });
-    studentStore.setStudent({ ...student, photo: response.data.path.replace("fichier", "/uploadFile/file")  });
+    studentStore.setStudent({ ...student, photo: response.data.path.replace("fichier", "/uploadFile/file") });
   };
 
   const handleCloseConfirmModal = () => {
@@ -153,6 +154,9 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
     history.push("/student/ecolage");
   };
 
+  const handleAddDoc = () => {
+    history.push("/student/document");
+  };
   const getOptionLabel = (option: any) => option?.label;
 
   const onChangeAutoComplete = (e: any, newValue: string) => {
@@ -178,21 +182,18 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
     if (errors.length) {
       setOpenErrorSnackbar(true);
       return;
-   }
+    }
 
+  
 
-    const listStudents = toJS(studentStore.allStudent);
-    const classNames = listStudents.filter((item: any) => item?.class )
-
-   
     if (!studentStore.selectedStudent) {
 
-        props.studentStore.createStudent(student).then((addUser: any) => {
-          if (addUser) {
-            history.push("/student/list");
-            studentStore.getAllStudent();
-          }
-        });
+      props.studentStore.createStudent(student).then((addUser: any) => {
+        if (addUser) {
+          history.push("/student/list");
+          studentStore.getAllStudent();
+        }
+      });
     }
     else {
       props.studentStore.updateStudent(student).then((editStudent: any) => {
@@ -210,6 +211,7 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
 
 
   const handleDownload = () => {
+    
     const selectStudent = studentStore.selectedStudent;
     if (!studentStore.selectedStudent) {
       exportPDFStore.exportToPdfRecuDroit(student);
@@ -295,6 +297,54 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
 
   ];
 
+  const footerIconsDelegue: FooterIcon[] = [
+    {
+      id: 0,
+      ItemIcon: SaveListIcon,
+      label: "Ajouter",
+      type: "submit",
+      title: "Sauvegarder",
+    },
+    {
+      id: 1,
+      ItemIcon: ListIcon,
+      label: "Liste",
+      onClick: handleOpenConfirmModal("/student/list"),
+      title: "Liste",
+    },
+    {
+      id: 2,
+      ItemIcon: DeleteIcon,
+      label: "Supprimer",
+      onClick: handleOpenDeleteTotalModal,
+      title: "Supprimer"
+    },
+    {
+      id: 4,
+      ItemIcon: AddIcon,
+      label: "Nouveau",
+      onClick: handleAddNew,
+      title: `${studentStore.selectedStudent?.schoolName.includes("Privé") ? "Ecolage" : "Frais divers"
+        }`,
+    },
+    {
+      id: 5,
+      ItemIcon: PictureAsPdfIcon,
+      onClick: handleDownload,
+      title: "Exporter en PDF",
+    },
+
+    {
+      id: 6,
+      ItemIcon: MailIcon,
+      label: "Ajouts Documents",
+      onClick: handleAddDoc,
+      title: "Ajouts Documents",
+
+    },
+
+
+  ];
 
   return (
     <div className={classes.root}>
@@ -416,7 +466,7 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
                       onChange={handleChange}
                     />
                   </Grid>
-                  <Grid item={true} xs={12} md={6} >
+                  <Grid item={true} xs={12} md={4} >
                     <TextField
                       label="Numéro matricule"
                       name="matriculNumber"
@@ -427,7 +477,7 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
                     />
                   </Grid>
 
-                  <Grid item={true} xs={12} md={6}>
+                  <Grid item={true} xs={12} md={4}>
                     <TextField
                       label="Niveau"
                       name="height"
@@ -437,6 +487,17 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
                       onChange={handleChange}
                     />
                   </Grid>
+                  {isRole &&
+                    (<Grid item={true} xs={12} md={4}>
+                      <TextField
+                        label="Email"
+                        name="email"
+                        value={student.email || ""}
+                        required={true}
+                        fullWidth={true}
+                        onChange={handleChange}
+                      />
+                    </Grid>)}
 
                   <Grid item={true} xs={12} md={4}>
                     <TextField
@@ -474,13 +535,13 @@ const CreateStudent: FC<CreateStudentProps> = (props: any) => {
             </div>
           </div>
         </div>
-        <EditFooter icons={footerIcons} />
+        <EditFooter icons={isRole ? footerIconsDelegue : footerIcons} />
         <ErrorSnackbar
-        open={openErrorSnackbar}
-        handleClose={handleCloseErrors}
-        errors={saveErrors}
-        defaultTitle="Vérifiez le formulaire"
-      />
+          open={openErrorSnackbar}
+          handleClose={handleCloseErrors}
+          errors={saveErrors}
+          defaultTitle="Vérifiez le formulaire"
+        />
       </form>
     </div>
   );

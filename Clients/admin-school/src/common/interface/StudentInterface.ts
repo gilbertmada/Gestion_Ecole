@@ -5,6 +5,7 @@ export interface IStudent {
   firstName: string;
   role: string;
   nomRole:string;
+  email:string;
   height: string;
   matriculNumber: string;
   inscriptionDroit: string;
@@ -18,6 +19,10 @@ export interface IStudent {
   isEtat: boolean;
 }
 
+export interface IMessage {
+  _id?: string;
+  message: string;
+}
 export interface IFraisDivers {
   id: number;
   student: string;

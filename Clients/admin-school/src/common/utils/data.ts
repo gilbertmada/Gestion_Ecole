@@ -173,6 +173,8 @@ const admins = ["ADMIN", "DIR", "PROV", "PA", "SURV"];
 
 const utilisateurPermission = ["ADMIN", "DIR", "PROV", "PA", "SURV"];
 
+const superUtilisateur = ["ADMIN"];
+
 const formatAmountToFr = (data: any) => {
   return `${new Intl.NumberFormat("de-DE").format(+data)} Ar`;
 };
@@ -206,6 +208,10 @@ export {
 
 export {
   utilisateurPermission,
+};
+
+export {
+  superUtilisateur,
 };
 
 export {

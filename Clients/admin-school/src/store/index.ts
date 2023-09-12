@@ -5,8 +5,9 @@ import professorStore from './ProfessorStore';
 import searchStore from './SearchListStore';
 import studentStore from './StudentStore';
 import classeStore from './ClasseStore';
+import schoolStore from './SchoolStore';
 import exportPDFStore from './ExportPDFStore';
-
+import noteStore from './NoteStore';
 
 // export {
 //     authStore,
@@ -17,7 +18,7 @@ import exportPDFStore from './ExportPDFStore';
 //     professorStore
 // };
 
-
+export { schoolStore };
 export { authStore };
 export { userStore };
 export { rootStore };
@@ -26,3 +27,4 @@ export { studentStore };
 export { classeStore };
 export { professorStore };
 export { exportPDFStore };
+export {noteStore };

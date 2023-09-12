@@ -325,7 +325,7 @@ const CreateUser: FC<AbstractEmptyInterface> = (props: any) => {
                     />
                   </Grid>
                   <Grid container={true} spacing={2}>
-                    <Grid item={true} md={6}>
+                    <Grid item={true} xs={12} md={4}>
                       <TextField
                         label="Nom"
                         required={true}
@@ -336,7 +336,7 @@ const CreateUser: FC<AbstractEmptyInterface> = (props: any) => {
                       />
                     </Grid>
 
-                    <Grid item={true} xs={12} md={6}>
+                    <Grid item={true} xs={12} md={4}>
                       <TextField
                         label="Prénom"
                         name="firstName"
@@ -345,6 +345,17 @@ const CreateUser: FC<AbstractEmptyInterface> = (props: any) => {
                         onChange={handleChange}
                       />
                     </Grid>
+                    <Grid item={true} xs={12} md={4}>
+                            <TextField
+                                label="Ecole"
+                                name="schoolName"
+                                fullWidth={true}
+                                // value={dataClasse.schoolName || ""}
+                                value={user.schoolName || ""}
+                                onChange={handleChange}
+
+                            />
+                        </Grid>
                   </Grid>
 
                   <Grid container={true} spacing={2}>

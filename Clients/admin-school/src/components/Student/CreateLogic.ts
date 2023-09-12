@@ -19,11 +19,11 @@ export const validationData = (store: StudentStoreInterface): string[] => {
     errors.push("Nom d'ecole que vous avez saisi est incorrect");
   }
 
-  if (role_H.length=== 1 && role_H[0].role === store.Student?.role) {
+  if (role_H.length >1 && role_H[0].role === store.Student?.role) {
     errors.push("Délégué de classe garçon  a déjà existé");
   }
 
-  if (role_F.length === 1 && role_F[0].role === store.Student?.role) {
+  if (role_F.length > 1 && role_F[0].role === store.Student?.role) {
     errors.push("Déléguée de classe fille a déjà existé");
   }
 

@@ -11,7 +11,17 @@ import { IEcolagePrive, IFraisDivers, IStudent } from '../common/interface/Stude
 export interface StudentStoreInterface {
     allStudent: IStudent[];
     isCreate: boolean;
+    isCreateDoc: boolean;
     isLoading: boolean;
+    isJ6true: boolean;
+    isMessage: boolean;
+    isNewMessage: boolean;
+    newMessag: string;
+    setIsMessage: (data: boolean) => void;
+    setNewMessg: (data: any) => void;
+    setopenDialogDoc: (data: boolean) => void;
+    setisJ6true: (data: boolean) => void;
+    setBoolDoc: (data: boolean) => void;
     Student: IStudent | null;
     droit: IFraisDivers[];
     ecolagePrive: IEcolagePrive[];
@@ -39,6 +49,11 @@ export interface StudentStoreInterface {
     deleteTotalFraisDivers: (data: IFraisDivers) => void;
     selectedStudent: IStudent | null;
     setSelectedStudent: (data: IStudent | null) => void;
+    boutonLoad: (data: any) => Promise<any>;
+    urlDocument: any[] | [];
+    document: any;
+    setDefaultDocument: () => void;
+    setDocument: (e: any, key: string) => void;
 
 }
 
@@ -49,13 +64,29 @@ class StudentStore implements StudentStoreInterface {
 
     @observable selectedStudent: IStudent | null = null;
 
+    @observable document: any = {};
+
+    @observable isCreateDoc = false;
+
+    @observable isJ6true = false;
+
+    @observable isMessage = false;
+
+    @observable newMessag = "";
+
+    @observable isNewMessage = false;
+
     @observable allStudent: IStudent[] = [];
 
     @observable droit: IFraisDivers[] = [];
 
+    @observable urlDocument: any[] = [];
+
     @observable ecolagePrive: IEcolagePrive[] = [];
 
     @observable isLoading = false;
+
+    @observable openDialogDoc = false;
 
     @observable isCreate = false;
 
@@ -71,6 +102,56 @@ class StudentStore implements StudentStoreInterface {
             isBlocked: false,
         };
     }
+
+    @action setisJ6true = (data: boolean) => {
+        this.isJ6true = data;
+    }
+
+    @action setIsMessage = (data: boolean) => {
+        this.isMessage = data;
+    }
+
+    @action setNewMessg = (data: any) => {
+        this.newMessag = {...data};
+    }
+
+    @action setBoolDoc = (data: boolean) => {
+        this.isCreateDoc = data;
+    }
+
+    @action setDefaultDocument = () => {
+        this.document = {};
+    }
+
+    @action setDocument = (data: any, key: string) => {
+
+        if (key === "deleted") {
+            this.document = { ...data };
+        } else {
+
+            this.document = {
+                ...this.document,
+                [key]: { ...data },
+
+            };
+
+            if (key !== "message") {
+
+                const urlDocument: any[] = [...this.urlDocument]
+
+                urlDocument.push(data.path);
+
+                this.urlDocument = urlDocument;
+
+                // this.setConditionAtStart(urlDocument);
+
+
+            }
+
+
+        }
+
+    };
 
     @observable filters = {
         // immo: false,
@@ -91,6 +172,44 @@ class StudentStore implements StudentStoreInterface {
         this.Student = s;
     };
 
+    @action setopenDialogDoc = (bool: boolean) => {
+        this.openDialogDoc = bool;
+    };
+
+    @action boutonLoad = async (data: any) => {
+
+        this.isLoading = true;
+
+        try {
+
+            const dataSendToBack = data.numberContrat;
+
+            const result = await axios.post(
+                `${config.servers.apiUrl}student/load/`, { dataSendToBack }
+            );
+
+            const dataSend = result.data[0]
+
+            if (dataSend.length !== 0) {
+                // this.setComment("");
+
+                // this.setContrat(result.data[0]);
+
+                return rootStore.succesSnackBar(true, "Page mis à jour !");
+            }
+
+            return rootStore.updateSnackBar(true, "Il n'y a pas encore de EDL !");
+
+        } catch (err) {
+            parseError(err, {
+                401: "Vous n'êtes pas autorisé à voir ce contenu",
+                400: "Veuillez remplir correctement les champs",
+                500: "Il n'y a pas encore de EDL !",
+            });
+        } finally {
+            this.isLoading = false;
+        }
+    };
 
     @action setIsCreate = (data: boolean) => {
         this.isCreate = data;
@@ -130,11 +249,27 @@ class StudentStore implements StudentStoreInterface {
 
     };
 
+    @action saveMessage = async (newEdl: any, saveEdl: any, isdefault: any, signature: any, contrat: any) => {
+
+        try {
+
+            const result = await axios.post(`${config.servers.apiUrl}contrat/saveMessage`, { newEdl, saveEdl, isdefault, signature, contrat });
+
+            this.boutonLoad(result.data.contrats)
+
+            rootStore.succesSnackBar(true, "Message enregistré avec succès");
+
+        } catch (error: any) {
+            rootStore.updateSnackBar(true, "Une erreur s'est produit, veuillez réessayer ultérieurement");
+        }
+    };
+
+
     @action getAllStudent = async () => {
         this.isLoading = true;
         try {
             const students = await axios.get(`${config.servers.apiUrl}student/`);
-     
+
             this.allStudent = students.data;
             this.isLoading = false;
         } catch (error) {
@@ -211,7 +346,7 @@ class StudentStore implements StudentStoreInterface {
 
     @action createEcolagePrive = async (data: any) => {
         try {
-   
+
             const addEcolage = await axios.post(`${config.servers.apiUrl}student/ecolage`,
                 data
             );
@@ -273,7 +408,7 @@ class StudentStore implements StudentStoreInterface {
             return student;
         } catch (err) {
             parseError(err, {
-                404: "L'utilisateur demandé est introuvable",
+                404: "L'élève demandé est introuvable",
                 403: 'Vous ne pouvez pas effectuer cette opération ou le mot de passe entré est incorrect',
             });
         }

@@ -115,6 +115,8 @@ const Ecolage: FC<AbstractEmptyInterface> = (props: any) => {
     setOpenTotalDeleteModal(false);
   };
 
+
+
   const handleOpenConfirmModal = (path: string) => (e: any) => {
     e.preventDefault();
 
@@ -122,6 +124,7 @@ const Ecolage: FC<AbstractEmptyInterface> = (props: any) => {
     setOpenModal(true);
 
   }
+
 
   const listEcolages = toJS(studentStore.ecolagePrive);
   const listFrais = toJS(studentStore.droit);
@@ -159,7 +162,7 @@ const Ecolage: FC<AbstractEmptyInterface> = (props: any) => {
     .reduce((a: any, b: any) => a + b)
     : 0;
 
-  const droit= studentStore.selectedStudent ?  parseInt(studentStore.selectedStudent?.inscriptionDroit , 10): "";
+  const droit = studentStore.selectedStudent ? parseInt(studentStore.selectedStudent?.inscriptionDroit, 10) : "";
   const totalDroitEcolage = +totalEcolage + +droit;
   const totalDroitFrais = +totalFrais + +droit;
 
@@ -257,6 +260,10 @@ const Ecolage: FC<AbstractEmptyInterface> = (props: any) => {
           handleCloseDeleteModal={handleCloseDeleteTotalModal}
           deleteData={deleteTotalData}
         />
+        {/* <Documents
+          open={studentStore.openDialogDoc}
+          handleClose={toogleDialogCreate}
+        /> */}
       </div>
 
       <HeaderPath

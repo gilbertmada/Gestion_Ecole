@@ -1,18 +1,15 @@
 
 import Users from '../../Assets/dashboard/CLICAR-user-20.svg';
-// import eleve from '../../Assets/dashboard/eleves.png';
+import school from '../../Assets/dashboard/school.png';
 import etuduant from '../../Assets/dashboard/etudiants.png';
 import enseignant from '../../Assets/dashboard/enseignant.png';
 import rootStore from '../../store/AppStore';
-// import classe from '../../Assets/dashboard/classe.png';
 import classe from '../../Assets/dashboard/classe.svg';
 import { inject, observer } from 'mobx-react';
 import {
-  // accsAndComs,
-  admins,
-  // comAndFacts,
-  utilisateurPermission,
 
+  utilisateurPermission,
+superUtilisateur
 } from '../utils/data';
 import { userStore } from '../../store';
 
@@ -54,6 +51,13 @@ const rowData = (): Idashboard[] => [
     nbr: rootStore.numbers.classNumber,
     images: classe,
     permissions: utilisateurPermission,
+  },
+  {
+    titre: 'ECOLES',
+    link: '/school/new-school',
+    nbr: rootStore.numbers.classNumber,
+    images: school,
+    permissions: superUtilisateur,
   },
   // {
   //   titre: 'TEST',
