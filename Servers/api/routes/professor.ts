@@ -12,7 +12,7 @@ router.get("/"  , [checkJwt, checkRole(allUsers)]  , ProfessorController.listPro
 
 //Create a new user
 // router.post("/", [checkJwt, checkRole(admins)], UserController.newUser);
-router.post("/",ProfessorController.newProfessor);
+router.post("/",[checkJwt, checkRole(admins)],ProfessorController.newProfessor);
 
 
 //Edit one user

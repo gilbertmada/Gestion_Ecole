@@ -8,6 +8,7 @@ export interface IStudent extends Document {
     matriculNumber: string;
     role: string;
     nomRole: string;
+    email: string;
     class: string;
     address: string;
     inscriptionDroit?: string;
@@ -41,6 +42,10 @@ const StudentSchema: Schema = new Schema({
         required: false,
     },
     height: {
+        type: String,
+        required: false,
+    },
+    email: {
         type: String,
         required: false,
     },

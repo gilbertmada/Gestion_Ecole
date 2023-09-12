@@ -7,8 +7,8 @@ export const allUsers = [
 
   export const admins = [
     'ADMIN',
-    'DIR',
   ]
+
 
   export const horror = [
     '6h-7h',
